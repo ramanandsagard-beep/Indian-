@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CO2 - Regional Painting Fusion</title>
+<style>
+:root{
+  --ink:#24180f; --muted:#6f5a49; --paper:#fffaf1; --cream:#f5ead7;
+  --terracotta:#b84a32; --saffron:#d8892f; --indigo:#274c77; --green:#426b50;
+  --gold:#c59a3a; --white:#fff; --shadow:0 12px 35px rgba(65,38,16,.12);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;font-family:Georgia,"Times New Roman",serif;color:var(--ink);
+  background:linear-gradient(135deg,#fffaf1 0%,#f7eddc 50%,#fffaf1 100%);
+}
+nav{
+  position:sticky;top:0;z-index:20;background:rgba(36,24,15,.96);
+  padding:13px 5%;display:flex;gap:12px;align-items:center;flex-wrap:wrap;
+}
+nav .brand{color:#ffe7bb;font-weight:bold;margin-right:auto;letter-spacing:.5px}
+nav a{color:#fff3df;text-decoration:none;padding:8px 12px;border-radius:20px;font-family:Arial,sans-serif;font-size:14px}
+nav a:hover{background:#6f321f}
+.hero{
+  min-height:74vh;display:grid;place-items:center;text-align:center;padding:70px 7%;
+  background:
+    radial-gradient(circle at 20% 25%,rgba(216,137,47,.25),transparent 25%),
+    radial-gradient(circle at 80% 60%,rgba(39,76,119,.15),transparent 25%);
+}
+.hero h1{font-size:clamp(42px,7vw,78px);margin:10px 0;color:#542818}
+.hero p{font:18px/1.7 Arial,sans-serif;color:var(--muted);max-width:820px;margin:auto}
+.badges{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:25px 0}
+.badge{padding:9px 15px;border-radius:30px;background:#fff;border:1px solid #e6d5bd;font:700 13px Arial,sans-serif}
+section{padding:75px 6%;max-width:1250px;margin:auto}
+.section-title{text-align:center;margin-bottom:42px}
+.section-title .eyebrow{font:700 12px Arial,sans-serif;letter-spacing:2px;color:var(--terracotta);text-transform:uppercase}
+.section-title h2{font-size:40px;margin:8px 0;color:#542818}
+.section-title p{font:16px/1.6 Arial,sans-serif;color:var(--muted);max-width:750px;margin:auto}
+.timeline{
+  position:relative;margin:35px auto;max-width:1100px;
+}
+.timeline:before{
+  content:"";position:absolute;left:50%;top:0;bottom:0;width:4px;background:linear-gradient(var(--saffron),var(--terracotta),var(--indigo));transform:translateX(-50%);
+}
+.t-item{position:relative;width:50%;padding:15px 45px 30px}
+.t-item:nth-child(odd){left:0;text-align:right}
+.t-item:nth-child(even){left:50%}
+.t-dot{
+  position:absolute;top:27px;width:18px;height:18px;background:#fff;border:5px solid var(--terracotta);
+  border-radius:50%;z-index:2;box-shadow:0 0 0 5px rgba(184,74,50,.12)
+}
+.t-item:nth-child(odd) .t-dot{right:-9px}
+.t-item:nth-child(even) .t-dot{left:-9px}
+.card{
+  background:rgba(255,255,255,.88);border:1px solid #ead8bf;border-radius:18px;padding:22px;
+  box-shadow:var(--shadow);transition:.25s;cursor:pointer
+}
+.card:hover{transform:translateY(-5px);box-shadow:0 18px 40px rgba(65,38,16,.17)}
+.art-thumb{height:180px;border-radius:13px;margin-bottom:15px;overflow:hidden;background:#eee}
+.art-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.year{display:inline-block;color:#fff;background:var(--terracotta);padding:5px 10px;border-radius:20px;font:700 12px Arial,sans-serif}
+.card h3{margin:10px 0 7px;font-size:23px}
+.card p{font:14px/1.55 Arial,sans-serif;color:var(--muted)}
+.map-wrap{
+  display:grid;grid-template-columns:1.25fr .75fr;gap:28px;align-items:stretch
+}
+.map-panel,.info-panel{
+  background:#fff;border:1px solid #ead8bf;border-radius:22px;box-shadow:var(--shadow);padding:22px
+}
+.map-panel svg{width:100%;height:auto;display:block}
+.state{fill:#ead6b7;stroke:#9e7b57;stroke-width:2}
+.marker{cursor:pointer}
+.marker circle{fill:var(--terracotta);stroke:#fff;stroke-width:4;transition:.2s}
+.marker:hover circle,.marker.active circle{fill:var(--indigo);r:11}
+.marker text{font:700 13px Arial,sans-serif;fill:#4b2d1c}
+.info-panel h3{font-size:28px;margin:5px 0 10px;color:#542818}
+.info-panel p{font:15px/1.65 Arial,sans-serif;color:var(--muted)}
+.info-chip{display:inline-block;padding:7px 10px;background:#f4ead9;border-radius:15px;font:700 12px Arial,sans-serif;margin:4px 4px 4px 0}
+.fusion-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start}
+.fusion-card{background:#fff;border:1px solid #ead8bf;border-radius:22px;padding:25px;box-shadow:var(--shadow)}
+.fusion-card h3{margin-top:0;font-size:26px}
+.fusion-card p,.fusion-card li{font:15px/1.65 Arial,sans-serif;color:var(--muted)}
+.artboard{
+  background:#f7e6c9;border:8px solid #6c3a20;border-radius:14px;padding:10px;
+  box-shadow:inset 0 0 0 2px #d7ad70;overflow:hidden
+}
+.artboard svg{display:block;width:100%;height:auto;background:#f6e3bf}
+.legend{display:flex;gap:15px;flex-wrap:wrap;margin-top:15px;font:13px Arial,sans-serif}
+.legend span{display:flex;align-items:center;gap:6px}
+.dot{width:13px;height:13px;border-radius:50%;display:inline-block}
+.dot.w{background:#24180f}.dot.k{background:#b84a32}.dot.f{background:#274c77}
+button{
+  border:0;background:var(--terracotta);color:#fff;padding:11px 17px;border-radius:25px;
+  cursor:pointer;font-weight:bold
+}
+button:hover{background:#8f3523}
+footer{background:#24180f;color:#f8e9d3;text-align:center;padding:35px 6%;font:14px Arial,sans-serif}
+.modal{
+  position:fixed;inset:0;background:rgba(20,10,4,.72);display:none;place-items:center;z-index:50;padding:20px
+}
+.modal.show{display:grid}
+.modal-box{background:#fffaf1;max-width:700px;width:100%;border-radius:22px;padding:30px;position:relative;max-height:90vh;overflow:auto}
+.close{position:absolute;right:18px;top:15px;background:#24180f;width:36px;height:36px;padding:0;border-radius:50%}
+.modal-box h2{margin-top:0;color:#542818;font-size:30px}
+.modal-box p,.modal-box li{font:15px/1.7 Arial,sans-serif;color:#5e4c3c}
+.note{padding:15px 18px;background:#fff2d8;border-left:5px solid var(--saffron);border-radius:10px;font:14px/1.6 Arial,sans-serif;color:#60452d}
+@media(max-width:850px){
+  .timeline:before{left:18px}
+  .t-item,.t-item:nth-child(even),.t-item:nth-child(odd){left:0;width:100%;padding-left:50px;text-align:left}
+  .t-item:nth-child(odd) .t-dot,.t-item:nth-child(even) .t-dot{left:9px;right:auto}
+  .map-wrap,.fusion-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<nav>
+  <div class="brand">INDIAN ART HERITAGE · CO2</div>
+  <a href="#fusion">Fusion Project</a>
+  <a href="#reflection">Reflection</a>
+</nav>
+
+<header class="hero">
+  <div>
+    <div class="badges">
+      <span class="badge">CLA-I ASSIGNMENT</span>
+      <span class="badge">CO2 · 10 MARKS</span>
+    </div>
+    <h1>Regional Painting Fusion</h1>
+    <p>Combining visual elements from two regional Indian painting traditions to create a new artwork while preserving their distinctive characteristics.</p>
+  </div>
+</header>
+
+<section id="fusion">
+  <div class="section-title">
+    <div class="eyebrow">CO2 · Assignment 3</div>
+    <h2>Regional Painting Fusion Project</h2>
+    <p>A conceptual artwork combining the geometric storytelling of Warli with the natural motifs and narrative textile language of Kalamkari.</p>
+  </div>
+
+  <div class="fusion-grid">
+    <div class="fusion-card">
+      <h3>Warli × Kalamkari</h3>
+      <p>
+        <strong>Warli contribution:</strong> simplified human figures, circles, triangles and community scenes.
+      </p>
+      <p>
+        <strong>Kalamkari contribution:</strong> flowing vines, floral borders, animal motifs and narrative composition inspired by hand-painted textile traditions.
+      </p>
+      <p>
+        <strong>Fusion concept:</strong> a village festival beside a stylized sacred tree, with Warli-style figures placed inside a Kalamkari-inspired botanical frame.
+      </p>
+      <div class="legend">
+        <span><i class="dot w"></i> Warli geometric figures</span>
+        <span><i class="dot k"></i> Kalamkari botanical motifs</span>
+        <span><i class="dot f"></i> Fusion composition</span>
+      </div>
+    </div>
+
+    <div class="fusion-card">
+      <div class="artboard">
+        <svg viewBox="0 0 650 520" role="img" aria-label="Warli and Kalamkari fusion artwork">
+          <rect width="650" height="520" fill="#f3d9a8"/>
+          <!-- Kalamkari-inspired border -->
+          <rect x="16" y="16" width="618" height="488" fill="none" stroke="#b84a32" stroke-width="8"/>
+          <path d="M35 65 C90 15 110 110 160 55 S235 25 280 65 S370 25 420 65 S520 20 615 70"
+                fill="none" stroke="#b84a32" stroke-width="6"/>
+          <path d="M35 455 C90 505 110 410 160 465 S235 495 280 455 S370 495 420 455 S520 500 615 450"
+                fill="none" stroke="#b84a32" stroke-width="6"/>
+          <!-- vines -->
+          <g fill="none" stroke="#274c77" stroke-width="5">
+            <path d="M70 390 C60 300 105 230 80 130"/>
+            <path d="M580 390 C590 300 545 230 570 130"/>
+          </g>
+          <g fill="#b84a32" stroke="#274c77" stroke-width="2">
+            <ellipse cx="73" cy="310" rx="15" ry="8" transform="rotate(-35 73 310)"/>
+            <ellipse cx="92" cy="265" rx="15" ry="8" transform="rotate(35 92 265)"/>
+            <ellipse cx="78" cy="215" rx="15" ry="8" transform="rotate(-35 78 215)"/>
+            <ellipse cx="577" cy="310" rx="15" ry="8" transform="rotate(35 577 310)"/>
+            <ellipse cx="558" cy="265" rx="15" ry="8" transform="rotate(-35 558 265)"/>
+            <ellipse cx="572" cy="215" rx="15" ry="8" transform="rotate(35 572 215)"/>
+          </g>
+          <!-- sacred tree -->
+          <path d="M325 420 C310 345 315 250 325 180" stroke="#6b3b22" stroke-width="22" fill="none"/>
+          <path d="M325 255 C270 210 220 220 190 180 M325 270 C375 215 430 220 465 175
+                   M325 220 C300 175 295 135 305 100 M325 220 C350 175 355 135 345 100"
+                stroke="#6b3b22" stroke-width="12" fill="none"/>
+          <g fill="#426b50" stroke="#274c77" stroke-width="3">
+            <circle cx="200" cy="165" r="38"/><circle cx="260" cy="145" r="48"/><circle cx="325" cy="110" r="52"/>
+            <circle cx="390" cy="145" r="48"/><circle cx="455" cy="165" r="38"/>
+          </g>
+          <!-- Warli sun -->
+          <circle cx="325" cy="62" r="25" fill="none" stroke="#24180f" stroke-width="5"/>
+          <g stroke="#24180f" stroke-width="4">
+            <path d="M325 28v-15M325 96v15M291 62h-15M359 62h15M301 38l-11-11M349 38l11-11"/>
+          </g>
+          <!-- Warli dancers: triangle bodies and stick limbs -->
+          <g stroke="#24180f" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="150" cy="370" r="10" fill="#24180f"/>
+            <path d="M150 382 L150 420 M150 392 L128 407 M150 392 L172 407 M150 420 L132 443 M150 420 L168 443"/>
+            <circle cx="215" cy="350" r="10" fill="#24180f"/>
+            <path d="M215 362 L215 402 M215 373 L193 387 M215 373 L237 387 M215 402 L197 425 M215 402 L233 425"/>
+            <circle cx="435" cy="350" r="10" fill="#24180f"/>
+            <path d="M435 362 L435 402 M435 373 L413 387 M435 373 L457 387 M435 402 L417 425 M435 402 L453 425"/>
+            <circle cx="500" cy="370" r="10" fill="#24180f"/>
+            <path d="M500 382 L500 420 M500 392 L478 407 M500 392 L522 407 M500 420 L482 443 M500 420 L518 443"/>
+          </g>
+          <!-- central drum -->
+          <ellipse cx="325" cy="425" rx="45" ry="20" fill="#b84a32" stroke="#24180f" stroke-width="5"/>
+          <path d="M280 425v35M370 425v35" stroke="#24180f" stroke-width="5"/>
+          <!-- birds -->
+          <path d="M115 120 q15 -15 30 0 q15 -15 30 0" fill="none" stroke="#274c77" stroke-width="5"/>
+          <path d="M475 120 q15 -15 30 0 q15 -15 30 0" fill="none" stroke="#274c77" stroke-width="5"/>
+        </svg>
+      </div>
+      <p><strong>Title:</strong> “Festival Under the Sacred Tree”</p>
+      <p><strong>Design principle:</strong> keep the two traditions visually distinguishable while connecting them through a single story and composition.</p>
+    </div>
+  </div>
+</section>
+
+<section id="reflection">
+  <div class="section-title">
+    <div class="eyebrow">CO2 · Submission</div>
+    <h2>Team & Reflection</h2>
+    <p>Replace the placeholders with your actual team information before submission.</p>
+  </div>
+  <div class="fusion-grid">
+    <div class="fusion-card">
+      <h3>Team Members And Registration Numbers</h3>
+      <ul>
+        <li>Member 1: L.Praaneeth Sai Reddy</li>
+        <li>Member 2: D.Ramanand Sagar</li>
+        <li>Member 3: M.Satwik Sai Srinivas</li>
+        <li>Member 4: P.Ravi Kiran Kumar Reddy</li>
+        <li>Member 5: N.Gowtham Santhosh</li>
+      </ul>
+      <ul>
+        <li>Member 1: RA2411003011506</li>
+        <li>Member 2: RA2411003011508</li>
+        <li>Member 3: RA2411003011507</li>
+        <li>Member 4: RA2411003011526</li>
+        <li>Member 5: RA2411003011499</li>
+      </ul>
+    </div>
+    <div class="fusion-card">
+      <h3>Learning Reflection</h3>
+      <p>The project shows how regional art styles can be studied individually and then combined through common themes such as nature, storytelling, community and spirituality.</p>
+      <p>Warli contributes geometric human figures and community scenes, while Kalamkari contributes botanical forms, narrative motifs and decorative borders.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <strong>CO2 · Regional Painting Fusion Project</strong><br>
+  Warli × Kalamkari · “Festival Under the Sacred Tree”
+</footer>
+</body>
+</html>
